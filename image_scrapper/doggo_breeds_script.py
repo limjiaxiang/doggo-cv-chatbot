@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import csv
+from googleapiclient.discovery import build
+from pprint import pprint
+import time
 
 
 def scrape_for_scraps(site, html_regex_filter, tag=None, iterate_trimmed=0, nested_string_tag=None,
@@ -42,8 +45,84 @@ def scrape_for_scraps(site, html_regex_filter, tag=None, iterate_trimmed=0, nest
             writer.writerows(lst)
 
 
+def photo_downloader(url, tag, folder):
+    r = requests.get(url=url, stream=True)
+    with open(folder + tag + '.jpg', 'wb') as file:
+        for chunk in r:
+            file.write(chunk)
+
+
+def google_search(search_term,
+                  api_key='AIzaSyBS2lkbK22yeNN5dpnnUWRydtBsUient3s',
+                  cse_id='017770384747286092867:4l4w65bmtkq', layer='items',
+                  number=1, image=0, start_index=1, **kwargs):
+    """
+        Performs a google search based on the search term on either webpage(s) or image(s)
+    :param search_term: Search of interest [String]
+    :param api_key: Google Custom Search API key [String]
+    Obtained from https://developers.google.com/custom-search/json-api/v1/overview
+    :param cse_id: Your Google Custom Search's search engine ID [String]
+    Obtained from cse.google.com > setup > Search engine ID
+    :param layer: First layer to traverse for JSON result [String]
+    View https://developers.google.com/custom-search/json-api/v1/reference/cse/list#parameters > Response
+    :param image: search for image if true (Boolean)
+    :param number: Number of search resulst to return [Integer]
+    :param kwargs: Additional parameters such as type of search (webpage or image), image size, etc.
+    More on https://developers.google.com/custom-search/json-api/v1/reference/cse/list#parameters > Parameters
+    :return: List of dictionaries. Each search result resides in a dictionary
+    """
+    service = build('customsearch', 'v1', developerKey=api_key)
+
+    if image:
+        res = service.cse().list(q=search_term, cx=cse_id, num=number, searchType='image', start=start_index, **kwargs).execute()
+        return res['items']
+    else:
+        res = service.cse().list(q=search_term, cx=cse_id, num=number, start=start_index, **kwargs).execute()
+        return res[layer]
+
+
 if __name__ == "__main__":
-    scrape_for_scraps(site='http://dogtime.com/dog-breeds/profiles',
-                      html_regex_filter=r"^article-crumbs clearfix group-letter letter.*", iterate_trimmed=1,
-                      nested_string_tag='h2',
-                      csv_header=['doggo_breed'], output_csv='doggotime_breeds')
+    # scrape_for_scraps(site='http://dogtime.com/dog-breeds/profiles',
+    #                   html_regex_filter=r"^article-crumbs clearfix group-letter letter.*", iterate_trimmed=1,
+    #                   nested_string_tag='h2',
+    #                   csv_header=['doggo_breed'], output_csv='doggotime_breeds')
+    #
+    # photo_downloader('http://cdn1-www.dogtime.com/assets/uploads/gallery/border-collie-dog-breed-pictures/1-facethreequarters.jpg',
+    #                  'bordercollie', 'images/')
+
+
+    #
+    # with open('doggotime_breeds.csv', 'r') as file:
+    #     reader = csv.reader(file)
+    #     breed_list = [breed[0] for breed in list(reader)]
+    #
+    # for breed in breed_list:
+    #     i = 1
+    #     while i < 46:
+    #         print('~~~ Doing Image Search for ' + breed + ' - Images ' + str(i) + ' to ' + str(i+8) + ' ~~~')
+    #         image_search = google_search(breed, number=9, image=1, start_index=i)
+    #         links = [result['link'] for result in image_search]
+    #
+    #         for num, link in enumerate(links):
+    #             print('~~~ Start downloading for ' + breed + ' - Image #' + str(i+num) + ' ~~~')
+    #             try:
+    #                 photo_downloader(url=link, tag=breed + '_' + str(i+num-1), folder='images/')
+    #             except Exception:
+    #                 continue
+    #             print('~~~ Download complete for ' + breed + ' - Image #' + str(i+num) + ' ~~~')
+    #         i = i + 9
+
+    i = 1
+    while i < 46:
+        print('~~~ Doing Image Search for ' + 'bolognese' + ' - Images ' + str(i) + ' to ' + str(i + 8) + ' ~~~')
+        image_search = google_search('bolognese' + ' dog', number=9, image=1, start_index=i)
+        links = [result['link'] for result in image_search]
+
+        for num, link in enumerate(links):
+            print('~~~ Start downloading for ' + 'bolognese' + ' - Image #' + str(i + num) + ' ~~~')
+            try:
+                photo_downloader(url=link, tag='bolognese' + '_' + str(i + num - 1), folder='images/')
+            except Exception:
+                continue
+            print('~~~ Download complete for ' + 'bolognese' + ' - Image #' + str(i + num) + ' ~~~')
+        i = i + 9
