@@ -5,6 +5,7 @@ import csv
 from googleapiclient.discovery import build
 from pprint import pprint
 import time
+import random
 
 
 def scrape_for_scraps(site, html_regex_filter, tag=None, iterate_trimmed=0, nested_string_tag=None,
@@ -47,7 +48,7 @@ def scrape_for_scraps(site, html_regex_filter, tag=None, iterate_trimmed=0, nest
 
 def photo_downloader(url, tag, folder):
     r = requests.get(url=url, stream=True)
-    with open(folder + tag + '.jpg', 'wb') as file:
+    with open(folder + '/' + tag + '.jpg', 'wb') as file:
         for chunk in r:
             file.write(chunk)
 
@@ -114,15 +115,16 @@ if __name__ == "__main__":
 
     i = 1
     while i < 46:
-        print('~~~ Doing Image Search for ' + 'bolognese' + ' - Images ' + str(i) + ' to ' + str(i + 8) + ' ~~~')
-        image_search = google_search('bolognese' + ' dog', number=9, image=1, start_index=i)
+        print('~~~ Doing Image Search for ' + 'newfoundland' + ' - Images ' + str(i) + ' to ' + str(i + 8) + ' ~~~')
+        image_search = google_search('brittany' + ' dog', number=9, image=1, start_index=i)
         links = [result['link'] for result in image_search]
 
         for num, link in enumerate(links):
-            print('~~~ Start downloading for ' + 'bolognese' + ' - Image #' + str(i + num) + ' ~~~')
+            print('~~~ Start downloading for ' + 'newfoundland' + ' - Image #' + str(i + num) + ' ~~~')
             try:
-                photo_downloader(url=link, tag='bolognese' + '_' + str(i + num - 1), folder='images/')
+                photo_downloader(url=link, tag='newfoundland' + '_' + str(i + num - 1),
+                                 folder= r'C:\Users\lim_j\Google Drive\Technical Skills\GitHub\Doggo Classifier Chatbot\images')
             except Exception:
                 continue
-            print('~~~ Download complete for ' + 'bolognese' + ' - Image #' + str(i + num) + ' ~~~')
+            print('~~~ Download complete for ' + 'newfoundland' + ' - Image #' + str(i + num) + ' ~~~')
         i = i + 9
