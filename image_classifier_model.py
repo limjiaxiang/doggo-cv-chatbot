@@ -9,7 +9,7 @@ from image_preprocess import ImageProcessor
 def model_builder(model_input, model_output):
     model = Sequential()
 
-    model.add(Conv2D(32, (5, 5), activation='relu', padding='same', input_shape=model_input.shape[1:]))
+    model.add(Conv2D(32, (5, 5), activation='relu', padding='same', input_shape=tuple(model_input.shape[1:])))
     model.add(Conv2D(32, (5, 5), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.25))
@@ -27,7 +27,7 @@ def model_builder(model_input, model_output):
     model.add(Flatten())
     model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(model_output.shape[1:], activation='softmax'))
+    model.add(Dense(tuple(model_output.shape[1:]), activation='softmax'))
 
     op = optimizers.SGD(lr=0.001)
 
