@@ -83,20 +83,16 @@ def google_search(search_term,
 
 
 if __name__ == "__main__":
-    # scrape_for_scraps(site='http://dogtime.com/dog-breeds/profiles',
+
+    # scrape_for_scraps(site='',
     #                   html_regex_filter=r"^article-crumbs clearfix group-letter letter.*", iterate_trimmed=1,
     #                   nested_string_tag='h2',
-    #                   csv_header=['doggo_breed'], output_csv='doggotime_breeds')
-    #
-    # photo_downloader('http://cdn1-www.dogtime.com/assets/uploads/gallery/border-collie-dog-breed-pictures/1-facethreequarters.jpg',
-    #                  'bordercollie', 'images/')
+    #                   csv_header=['doggo_breed'], output_csv='breeds')
 
+    with open('breeds.csv', 'r') as file:
+        reader = csv.reader(file)
+        breed_list = [breed[0] for breed in list(reader)]
 
-    #
-    # with open('doggotime_breeds.csv', 'r') as file:
-    #     reader = csv.reader(file)
-    #     breed_list = [breed[0] for breed in list(reader)]
-    #
     # for breed in breed_list:
     #     i = 1
     #     while i < 46:
@@ -112,19 +108,3 @@ if __name__ == "__main__":
     #                 continue
     #             print('~~~ Download complete for ' + breed + ' - Image #' + str(i+num) + ' ~~~')
     #         i = i + 9
-
-    i = 1
-    while i < 46:
-        print('~~~ Doing Image Search for ' + 'newfoundland' + ' - Images ' + str(i) + ' to ' + str(i + 8) + ' ~~~')
-        image_search = google_search('brittany' + ' dog', number=9, image=1, start_index=i)
-        links = [result['link'] for result in image_search]
-
-        for num, link in enumerate(links):
-            print('~~~ Start downloading for ' + 'newfoundland' + ' - Image #' + str(i + num) + ' ~~~')
-            try:
-                photo_downloader(url=link, tag='newfoundland' + '_' + str(i + num - 1),
-                                 folder= r'C:\Users\lim_j\Google Drive\Technical Skills\GitHub\Doggo Classifier Chatbot\images')
-            except Exception:
-                continue
-            print('~~~ Download complete for ' + 'newfoundland' + ' - Image #' + str(i + num) + ' ~~~')
-        i = i + 9
