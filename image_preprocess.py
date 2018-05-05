@@ -4,7 +4,7 @@ import csv
 
 import numpy as np
 import cv2
-
+from keras.preprocessing import image
 
 class ImageProcessor(object):
     def __init__(self, image_folder, classes_csv=None, classes_lst=None):
@@ -76,7 +76,7 @@ class ImageProcessor(object):
             return loaded_images, output_vectors
 
 
-def resize_image(image, pad=True, resized_height=400, resized_width=400):
+def resize_image(image, pad=True, resized_height=300, resized_width=300):
     (height, width, channel) = image.shape
     if height > width:
         ratio = height/resized_height
