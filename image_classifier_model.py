@@ -12,27 +12,27 @@ from image_preprocess import ImageProcessor
 def model_builder(model_input, model_output):
     model = Sequential()
 
-    model.add(Conv2D(8, (3, 3), activation='relu', padding='same', input_shape=tuple(model_input.shape[1:])))
-    model.add(Conv2D(16, (3, 3), activation='relu'))
+    model.add(Conv2D(16, (3, 3), activation='relu', padding='same', input_shape=tuple(model_input.shape[1:])))
+    model.add(Conv2D(32, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.25))
 
-    # model.add(Conv2D(64, (5, 5), activation='relu', padding='same'))
-    # model.add(Conv2D(64, (5, 5), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=(2, 2)))
-    # model.add(Dropout(0.25))
+    model.add(Conv2D(16, (5, 5), activation='relu', padding='same'))
+    model.add(Conv2D(32, (5, 5), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
 
-    # model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
-    # model.add(Conv2D(32, (3, 3), activation='relu'))
-    # model.add(MaxPooling2D(pool_size=(2, 2)))
-    # model.add(Dropout(0.25))
+    model.add(Conv2D(16, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
 
     model.add(Flatten())
     model.add(Dense(32, activation='relu'))
     model.add(Dropout(0.25))
     model.add(Dense(model_output.shape[1], activation='softmax'))
 
-    op = optimizers.SGD(lr=0.005, momentum=0.9, nesterov=True)
+    op = optimizers.SGD(lr=0.001, momentum=0.9, nesterov=True)
 
     model.compile(optimizer=op, metrics=['accuracy', 'categorical_accuracy'],
                   loss='categorical_crossentropy')

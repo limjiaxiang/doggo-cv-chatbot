@@ -4,7 +4,7 @@ import csv
 
 import numpy as np
 import cv2
-from keras.preprocessing import image
+
 
 class ImageProcessor(object):
     def __init__(self, image_folder, classes_csv=None, classes_lst=None):
@@ -23,11 +23,11 @@ class ImageProcessor(object):
             sys.exit('Provided neither csv filename or Python list for image classes')
 
         for image_filename in self.images_filenames:
-            image = cv2.imread(image_filename)
-            if image is None:
+            img = cv2.imread(image_filename)
+            if img is None:
                 self.unprocessed_images.append(image_filename)
             else:
-                image_shape = image.shape
+                image_shape = img.shape
                 if image_shape[0] > self.max_img_height:
                     self.max_img_height = image_shape[0]
                 if image_shape[1] > self.max_img_width:
@@ -69,18 +69,31 @@ class ImageProcessor(object):
                         final_image = resize_image(file_img, pad=True)
                     else:
                         final_image = resize_image(file_img, pad=False)
-                    loaded_images.append(np.array(final_image))
+                    normalised_image = normalise_image(final_image)
+                    loaded_images.append(np.array(normalised_image))
                     output_vectors.append(np.array(output_vec))
             loaded_images = np.array(loaded_images)
             output_vectors = np.array(output_vectors)
             return loaded_images, output_vectors
 
 
-def resize_image(image, pad=True, resized_height=300, resized_width=300):
-    (height, width, channel) = image.shape
+def normalise_image(img, channels=3):
+    global output_image
+    for ch_num in range(channels):
+        ch_image = img[:, :, ch_num]
+        normalised_image = (ch_image - ch_image.mean()) / ch_image.std()
+        if ch_num == 0:
+            output_image = normalised_image
+        else:
+            output_image = np.dstack((output_image, normalised_image))
+    return output_image
+
+
+def resize_image(img, pad=True, resized_height=300, resized_width=300):
+    (height, width, channel) = img.shape
     if height > width:
         ratio = height/resized_height
-        scaled_image = cv2.resize(image, (int(width/ratio), resized_height))
+        scaled_image = cv2.resize(img, (int(width / ratio), resized_height))
         if pad:
             padding_pixel = [0, 0, 0]
             padding_size = resized_width - int(width/ratio)
@@ -90,7 +103,7 @@ def resize_image(image, pad=True, resized_height=300, resized_width=300):
             return padded_image
     else:
         ratio = width/resized_width
-        scaled_image = cv2.resize(image, (resized_width, int(height/ratio)))
+        scaled_image = cv2.resize(img, (resized_width, int(height / ratio)))
         if pad:
             padding_pixel = [0, 0, 0]
             padding_size = resized_height - int(height / ratio)
