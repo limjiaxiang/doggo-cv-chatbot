@@ -22,11 +22,14 @@ Preprocessing data
 3. Histogram equalisation to increase contrast of low contrast image by balancing out distribution of pixel densities [To-do]
 
 Modeling
-1. Develop a simple 3 layer CNN model with pooling using Keras (model v1) [DONE]
+1. Develop a simple 3 layer CNN model with pooling using Keras (model v1): [DONE]
+  - Kernel size of 3x3
+  - Pooling size of 2x2
+  - Dropout of 0.4 (Prevent overfitting)
 2. Decide on an optimiser to use [DONE]
-    Tried out SGD as optimiser but decided on Nadam (Nesterov momentum adaptive moment estimation)
-      - Nesterov momentum in place of standard momentum used in adam optimiser
-      - Uses weighted average of past n gradients to calculate parameter (weight) update
+  - Tried out SGD as optimiser but decided on Nadam (Nesterov momentum adaptive moment estimation)
+    - Nesterov momentum in place of standard momentum used in adam optimiser
+    - Uses weighted average of past n gradients to calculate parameter (weight) update
 3. Train model using simple CNN architecture [In-progress]
 4. Apply transfer learning using Google pretrained image recognition model [To-do]
 
