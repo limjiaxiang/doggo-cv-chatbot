@@ -89,7 +89,7 @@ def normalise_image(img, channels=3):
     return output_image
 
 
-def resize_image(img, pad=True, resized_height=300, resized_width=300):
+def resize_image(img, pad=True, resized_height=200, resized_width=200):
     (height, width, channel) = img.shape
     if height > width:
         ratio = height/resized_height
