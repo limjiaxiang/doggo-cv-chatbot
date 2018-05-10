@@ -46,9 +46,22 @@ Modeling
 4. Apply transfer learning using Google pretrained image recognition model [To-do]
 
 Validation: [To-do]
-1. Test set from downloaded images (20%)
+1. Modified validation set (data augmentation)
   - Classification accuracy
-2. Photo images
+2. Photos of dogs taken using mobile devices
+
+
+Unlisted to-dos: 
+1. Build pre and post processing pipeline
+  1. Preprocess input image
+    - Check processability
+    - Resizing
+    - Padding
+    - Normalisation (To check whether to store, training set channels' mean and sd values for scaling purposes)
+  2. Postprocess output
+    - Decode output to class labels
+2. Further modularise image_processing module
+3. Write documentations to code
 
 --
 
