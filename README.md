@@ -1,11 +1,16 @@
 # doggo-cv-chatbot
-Doggo Breed Detection Chatbot Project:
+<b>Doggo Breed Detection Chatbot Project: </b>
+<br/>
+<br/>
+<br/>
 
-Data Science Process:
+Data Science Process:<br/>
+<br/>
 
 Gathering dataset
 1. Scrape relevant website for all breeds of dogs and save to csv [DONE]
-2. Download images of each class (breed) using Google CustomSearch API and requests [DONE]
+2. Download images of each class (breed) using Google CustomSearch API and requests [DONE] <br/>
+<br/>
 
 Preprocessing data 
 1. Build image preprocessing module with ImageProcessor class that:
@@ -19,7 +24,8 @@ Preprocessing data
       1. 4D Numpy array of (number of examples, image height, image width, number of channels)
       2. 1D Numpy array of labels in the same order as the loaded images
 2. Checked through download images for non-dog breed images and removed them [DONE]
-3. Histogram equalisation to increase contrast of low contrast image by balancing out distribution of pixel densities [To-do]
+3. Histogram equalisation to increase contrast of low contrast image by balancing out distribution of pixel densities [To-do]<br/>
+<br/>
 
 Modeling
 1. Develop a simple 3 layer CNN model with pooling using Keras (model v1): [DONE]
@@ -43,13 +49,14 @@ Modeling
       2. Added 1 more fully connected layer before softmax output and increase number of nodes to be between number of output nodes and number of training examples (slows down training)
       3. Increase max pooling kernel size from 2x2 to 3x3 to (speed up training)
       4. Nadam on learning rate of 0.03 (speed up training)
-4. Apply transfer learning using Google pretrained image recognition model [To-do]
+4. Apply transfer learning using Google pretrained image recognition model [To-do]<br/>
+<br/>
 
 Validation: [To-do]
 1. Modified validation set (data augmentation)
     - Classification accuracy
-2. Photos of dogs taken using mobile devices
-
+2. Photos of dogs taken using mobile devices<br/>
+<br/>
 
 Unlisted to-dos: 
 1. Build pre and post processing pipeline
@@ -61,7 +68,9 @@ Unlisted to-dos:
     2. Postprocess output
         - Decode output to class labels
 2. Further modularise image_processing module
-3. Write documentations to code
+3. Write documentations to code<br/>
+<br/>
+<br/>
 
 --
 
