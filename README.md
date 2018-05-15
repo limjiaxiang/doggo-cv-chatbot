@@ -7,6 +7,16 @@
 Data Science Process:<br/>
 <br/>
 
+Update 15/05/2018: (Updated plan)
+    - Severe lack of instances for each class (30~40)
+    - Download a minimum of 200 images per class (209 classes), scaling them down to 300x300 pixels
+    - Perform 10 data augmentations per image, resulting in 2000 augmented images per class
+    - Obtain bottleneck features of augmented images (2000*209) using InceptionV3, saving it in a .npy file
+    - Train nn model using bottleneck features on 2 FC NN, then 3 FC NN; both with dropout of 0.5 to reduce overfitting
+    - Train logistic regression model using bottleneck features, setting to 100 iterations
+    - If validation accuracy >= 0.5 then fine tune last convolution block of InceptionV3 by making it trainable<br/>
+<br/>
+
 Gathering dataset
 1. Scrape relevant website for all breeds of dogs and save to csv [DONE]
 2. Download images of each class (breed) using Google CustomSearch API and requests [DONE] <br/>
