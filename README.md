@@ -63,7 +63,7 @@ Modeling
 <br/>
 
 Validation: [To-do]
-1. Modified validation set (data augmentation)
+1. Validation set (10% of downloaded images per class)
     - Classification accuracy
 2. Photos of dogs taken using mobile devices<br/>
 <br/>
