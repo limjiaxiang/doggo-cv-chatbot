@@ -4,10 +4,12 @@ import csv
 
 import numpy as np
 import cv2
+from sklearn.externals import joblib
 
 
 class ImageProcessor(object):
-    def __init__(self, image_folder, classes_csv=None, classes_lst=None):
+    def __init__(self, image_folder, classes_csv=None, classes_lst=None,
+                 save_encoding_fname=None, load_encoding_fname=None):
         self.original_folder = os.getcwd()
         os.chdir(image_folder)
         self.image_folder = os.getcwd()
@@ -36,16 +38,22 @@ class ImageProcessor(object):
         self.processable_images = [filename for filename in self.images_filenames if
                                    filename not in self.unprocessed_images]
 
-        if classes_csv or classes_lst:
+        if load_encoding_fname:
+            encoding_dicts = joblib.load(load_encoding_fname)
+            self.val2idx = encoding_dicts['val2idx']
+            self.val2idx = encoding_dicts['idx2val']
+        else:
             if classes_csv:
                 with open(classes_csv) as csvfile:
                     data = csv.reader(csvfile)
                     # skip header
                     next(data, None)
                     self.classes = [row[0] for row in data]
-            else:
+            elif classes_lst:
                 self.classes = classes_lst
             self.val2idx, self.idx2val = create_encode_dicts(self.classes)
+            if save_encoding_fname:
+                joblib.dump({'val2idx': self.val2idx, 'idx2val': self.idx2val}, save_encoding_fname)
             for class_name, index in self.val2idx.items():
                 for image_filename in self.processable_images:
                     if class_name in image_filename:
@@ -53,7 +61,7 @@ class ImageProcessor(object):
                             self.classes_filenames_dict[index] = []
                         self.classes_filenames_dict[index].append(image_filename)
 
-    def load_images(self, padding=True):
+    def load_images(self, pad=True, stretch=True, normalise='dataset'):
         if not self.classes_filenames_dict:
             sys.exit('Classes have not been loaded into Image Processor')
         else:
@@ -65,20 +73,23 @@ class ImageProcessor(object):
                     output_vec = [0] * len(self.idx2val)
                     output_vec[class_index] = 1
                     file_img = cv2.imread(class_file)
-                    if padding:
-                        final_image = resize_image(file_img, pad=True)
-                    else:
-                        final_image = resize_image(file_img, pad=False)
-                    normalised_image = normalise_image(final_image)
-                    loaded_images.append(np.array(normalised_image))
+                    final_image = resize_image(file_img, pad=pad, stretch=stretch)
+                    if normalise == 'image':
+                        # For per image per channel normalisation
+                        normalised_image = normalise_image(final_image)
+                        loaded_images.append(np.array(normalised_image))
+                    loaded_images.append(np.array(final_image))
                     output_vectors.append(np.array(output_vec))
-            loaded_images = np.array(loaded_images)
+            if normalise == 'dataset':
+                loaded_images = normalise_dataset(np.array(loaded_images))
+            else:
+                loaded_images = np.array(loaded_images)
             output_vectors = np.array(output_vectors)
             return loaded_images, output_vectors
 
 
 def normalise_image(img, channels=3):
-    global output_image
+    output_image = None
     for ch_num in range(channels):
         ch_image = img[:, :, ch_num]
         normalised_image = (ch_image - ch_image.mean()) / ch_image.std()
@@ -89,29 +100,47 @@ def normalise_image(img, channels=3):
     return output_image
 
 
-def resize_image(img, pad=True, resized_height=200, resized_width=200):
+def normalise_dataset(dataset, channels=3):
+    ch_dataset = None
+    output_dataset = None
+    for ch_num in range(channels):
+        if channels > 1:
+            ch_dataset = np.expand_dims(dataset[:, :, :, ch_num], axis=3)
+        elif channels == 1:
+            ch_dataset = dataset
+        normalised_dataset = (ch_dataset - ch_dataset.mean()) / ch_dataset.std()
+        if ch_num == 0:
+            output_dataset = normalised_dataset
+        else:
+            output_dataset = np.concatenate((output_dataset, normalised_dataset), axis=3)
+    return output_dataset
+
+
+def resize_image(img, pad=True, stretch=True, resized_width=200, resized_height=200):
+    resized_aspect_ratio = float(resized_width)/resized_height
     (height, width, channel) = img.shape
-    if height > width:
-        ratio = height/resized_height
-        scaled_image = cv2.resize(img, (int(width / ratio), resized_height))
-        if pad:
-            padding_pixel = [0, 0, 0]
-            padding_size = resized_width - int(width/ratio)
-            left, right = __padding_size_split__(padding_size)
-            padded_image = cv2.copyMakeBorder(scaled_image, 0, 0, left, right,
-                                              cv2.BORDER_CONSTANT, value=padding_pixel)
-            return padded_image
+    if stretch or float(width)/height == resized_aspect_ratio:
+        output_image = cv2.resize(img, (resized_width, resized_height))
     else:
-        ratio = width/resized_width
-        scaled_image = cv2.resize(img, (resized_width, int(height / ratio)))
-        if pad:
-            padding_pixel = [0, 0, 0]
-            padding_size = resized_height - int(height / ratio)
-            top, bottom = __padding_size_split__(padding_size)
-            padded_image = cv2.copyMakeBorder(scaled_image, top, bottom, 0, 0,
-                                              cv2.BORDER_CONSTANT, value=padding_pixel)
-            return padded_image
-    return scaled_image
+        if height > width:
+            ratio = height/resized_height
+            output_image = cv2.resize(img, (int(width / ratio), resized_height))
+            if pad:
+                padding_pixel = [0, 0, 0]
+                padding_size = resized_width - int(width/ratio)
+                left, right = __padding_size_split__(padding_size)
+                output_image = cv2.copyMakeBorder(output_image, 0, 0, left, right,
+                                                  cv2.BORDER_CONSTANT, value=padding_pixel)
+        else:
+            ratio = width/resized_width
+            output_image = cv2.resize(img, (resized_width, int(height / ratio)))
+            if pad:
+                padding_pixel = [0, 0, 0]
+                padding_size = resized_height - int(height / ratio)
+                top, bottom = __padding_size_split__(padding_size)
+                output_image = cv2.copyMakeBorder(output_image, top, bottom, 0, 0,
+                                                  cv2.BORDER_CONSTANT, value=padding_pixel)
+    return output_image
 
 
 def __padding_size_split__(padding_size):
@@ -147,4 +176,4 @@ def encode_dict_keys(dict2encode, val2idx_dict):
 
 if __name__ == '__main__':
     processor = ImageProcessor('images', '../image_scrapper/doggotime_breeds - original.csv')
-    processor.load_images(padding=True)
+    processor.load_images(pad=True)

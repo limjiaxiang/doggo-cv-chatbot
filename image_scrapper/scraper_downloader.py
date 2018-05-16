@@ -54,8 +54,8 @@ def photo_downloader(url, tag, folder):
 
 
 def google_search(search_term,
-                  api_key='AIzaSyBS2lkbK22yeNN5dpnnUWRydtBsUient3s',
-                  cse_id='017770384747286092867:4l4w65bmtkq', layer='items',
+                  api_key,
+                  cse_id, layer='items',
                   number=1, image=0, start_index=1, **kwargs):
     """
         Performs a google search based on the search term on either webpage(s) or image(s)
@@ -89,9 +89,14 @@ if __name__ == "__main__":
     #                   nested_string_tag='h2',
     #                   csv_header=['doggo_breed'], output_csv='breeds')
 
-    with open('breeds.csv', 'r') as file:
-        reader = csv.reader(file)
-        breed_list = [breed[0] for breed in list(reader)]
+    with open('search_engine_creds.json') as creds_json:
+        cred_dict = eval(creds_json.read())
+        api_key = cred_dict['api_key']
+        cse_id = cred_dict['cse_id']
+
+    # with open('breeds.csv', 'r') as file:
+    #     reader = csv.reader(file)
+    #     breed_list = [breed[0] for breed in list(reader)]
 
     # for breed in breed_list:
     #     i = 1
