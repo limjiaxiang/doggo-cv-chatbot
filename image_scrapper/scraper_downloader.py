@@ -1,11 +1,14 @@
-import requests
-from bs4 import BeautifulSoup
 import re
 import csv
-from googleapiclient.discovery import build
-from pprint import pprint
+import os
 import time
-import random
+
+import requests
+from bs4 import BeautifulSoup
+from googleapiclient.discovery import build
+import cv2
+
+from image_preprocess import resize_image
 
 
 def scrape_for_scraps(site, html_regex_filter, tag=None, iterate_trimmed=0, nested_string_tag=None,
@@ -46,11 +49,18 @@ def scrape_for_scraps(site, html_regex_filter, tag=None, iterate_trimmed=0, nest
             writer.writerows(lst)
 
 
-def photo_downloader(url, tag, folder):
+def photo_downloader(url, tag, folder, resize=None):
     r = requests.get(url=url, stream=True)
-    with open(folder + '/' + tag + '.jpg', 'wb') as file:
+    image_filepath = os.path.join(folder, '.'.join([tag, 'jpg']))
+    with open(image_filepath, 'wb') as image:
         for chunk in r:
-            file.write(chunk)
+            image.write(chunk)
+    if resize:
+        img = cv2.imread(image_filepath)
+        resized_img = resize_image(img, pad=False, stretch=True, resized_width=resize[0], resized_height=resize[1])
+        cv2.imwrite(image_filepath, resized_img)
+
+
 
 
 def google_search(search_term,
@@ -94,22 +104,36 @@ if __name__ == "__main__":
         api_key = cred_dict['api_key']
         cse_id = cred_dict['cse_id']
 
-    # with open('breeds.csv', 'r') as file:
-    #     reader = csv.reader(file)
-    #     breed_list = [breed[0] for breed in list(reader)]
+    with open('breeds temp.csv', 'r') as file:
+        reader = csv.reader(file)
+        breed_list = [breed[0] for breed in list(reader)][1:]
 
-    # for breed in breed_list:
-    #     i = 1
-    #     while i < 46:
-    #         print('~~~ Doing Image Search for ' + breed + ' - Images ' + str(i) + ' to ' + str(i+8) + ' ~~~')
-    #         image_search = google_search(breed, number=9, image=1, start_index=i)
-    #         links = [result['link'] for result in image_search]
-    #
-    #         for num, link in enumerate(links):
-    #             print('~~~ Start downloading for ' + breed + ' - Image #' + str(i+num) + ' ~~~')
-    #             try:
-    #                 photo_downloader(url=link, tag=breed + '_' + str(i+num-1), folder='images/')
-    #             except Exception:
-    #                 continue
-    #             print('~~~ Download complete for ' + breed + ' - Image #' + str(i+num) + ' ~~~')
-    #         i = i + 9
+    for breed in breed_list:
+        i = 1
+
+        breed_dir = os.path.join('../images/' + breed)
+
+        if not os.path.isdir(breed_dir):
+            os.makedirs(breed_dir)
+
+        search_breed = breed
+        if 'dog' not in breed:
+            search_breed = ' '.join([breed, 'dog'])
+
+        while i < 100:
+            print('~~~ Doing Image Search for ' + breed + ' - Images ' + str(i) + ' to ' + str(i+9) + ' ~~~')
+            image_search = google_search(search_breed, api_key=api_key, cse_id=cse_id, number=10, image=1, start_index=i)
+            links = [result['link'] for result in image_search]
+
+            for num, link in enumerate(links):
+                print('~~~ Start downloading for ' + breed + ' - Image #' + str(i+num) + ' ~~~')
+                try:
+                    photo_downloader(url=link, tag=search_breed + '_' + str(i+num), folder=breed_dir,
+                                     resize=(250, 250))
+                except Exception as e:
+                    print(e)
+                    print('Did not download for', breed, 'photo number', i+num)
+                    continue
+                print('~~~ Download complete for    ' + breed + ' - Image #' + str(i+num) + ' ~~~')
+            i = i + 10
+            time.sleep(1)
