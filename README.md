@@ -20,7 +20,7 @@ Update 09/07/2018:
 4. Possible improvements to model after Telegram Bot development and integration
 	- Histogram equalisation of images
 	- Build model with 2 FC layer and retrain with existing train dataset
-	- Train logistic regression model using Inception V3 bottleneck features (Ensemble)
+	- Train logistic regression model using Inception V3 bottleneck features (Ensemble)<br/>
 
 Update 15/05/2018: (Updated plan)
 1. Severe lack of instances for each class (30~40)
@@ -75,7 +75,7 @@ Modeling
       3. Increase max pooling kernel size from 2x2 to 3x3 to (speed up training)
       4. Nadam on learning rate of 0.03 (speed up training)
 4. Apply transfer learning using Inception V3 image recognition model [DONE]
-	- Sticking to model built with transfer leanring due to the high computational cost of building a nn image classifier using a laptop
+	- Sticking to model built with transfer learning due to the high computational cost of building a nn image classifier from scratch
 	- Added a FC layer and set existing pre-trained layers to be untrainable
 	- Set FC layer to use RMSProp<br/>
 <br/>
@@ -101,4 +101,9 @@ Post-model training and validation:
 --
 
 Chatbot Development and Integration Process (TBC):
+1. Python Telegram Bot API or using NodeJS [To decide]
+2. Webhooks for bot
+	- When a user sends an image to the bot or mentioned the bot when sending an image in a group chat
+3. Bot sends images to back-end then run it through custom predict function
+4. Outputs breed prediction and probability of the prediction
 
