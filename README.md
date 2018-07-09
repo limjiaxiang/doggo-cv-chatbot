@@ -7,6 +7,21 @@
 Data Science Process:<br/>
 <br/>
 
+Update 09/07/2018:
+1. Downloaded ~90-100 images per class (max limit of 100 search results per search from Google Search)
+	- Resized images to 250x250 upon completion of download for each image to reduce HD memory usage
+	- Total of 19,778 images downloaded, 654 MB total
+2. Performed transfer learning on Inception V3 image classification model, added a FC layer and model was trained for ~22 epochs using data augmentation via Keras Image Datagen
+	- Tested on unseen dog images from Google search
+	  1. 10 images per breed for top 5 most popular dog breeds and top 5 least popular breeds (~70% accuracy)
+	- Tested on unseen dog images of friends' dogs
+	  1. total of 63 images consisting of a poodle, a shiba inu and a schnauzer (73% accuracy)
+3. Moving on to developing Telegram Bot and integrating model's function with bot
+4. Possible improvements to model after Telegram Bot development and integration
+	- Histogram equalisation of images
+	- Build model with 2 FC layer and retrain with existing train dataset
+	- Train logistic regression model using Inception V3 bottleneck features (Ensemble)
+
 Update 15/05/2018: (Updated plan)
 1. Severe lack of instances for each class (30~40)
 2. Download a minimum of 200 images per class (209 classes), scaling them down to 300x300 pixels
@@ -59,26 +74,27 @@ Modeling
       2. Added 1 more fully connected layer before softmax output and increase number of nodes to be between number of output nodes and number of training examples (slows down training)
       3. Increase max pooling kernel size from 2x2 to 3x3 to (speed up training)
       4. Nadam on learning rate of 0.03 (speed up training)
-4. Apply transfer learning using Google pretrained image recognition model [To-do]<br/>
+4. Apply transfer learning using Inception V3 image recognition model [DONE]
+	- Sticking to model built with transfer leanring due to the high computational cost of building a nn image classifier using a laptop
+	- Added a FC layer and set existing pre-trained layers to be untrainable
+	- Set FC layer to use RMSProp<br/>
 <br/>
 
-Validation: [To-do]
-1. Validation set (10% of downloaded images per class)
-    - Classification accuracy
-2. Photos of dogs taken using mobile devices<br/>
+Validation: [DONE]
+1. Validation sets
+    - 10 dog breeds images from Google (10 per breed): ~70% accuracy
+	- 63 dog images of friends' dogs (poodle, shiba inu, schnauzer): ~73% accuracy
 <br/>
 
-Unlisted to-dos: 
-1. Build pre and post processing pipeline
+Post-model training and validation: 
+1. Build pre and post processing pipeline [DONE]
     1. Preprocess input image
-        - Check processability
-        - Resizing
-        - Padding
-        - Normalisation (To check whether to store, training set channels' mean and sd values for scaling purposes)
+        - Check processability [To-do]
+        - Resizing (OpenCV resize)
+        - Normalisation using Inception V3 preprocess
     2. Postprocess output
         - Decode output to class labels
-2. Further modularise image_processing module
-3. Write documentations to code<br/>
+2. Further modularise image_processing module [To-do]<br/>
 <br/>
 <br/>
 
