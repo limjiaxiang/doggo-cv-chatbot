@@ -4,3 +4,4 @@ image_scrapper/search_engine_creds.json
 doggo_classifier.h5
 __pycache__/*
 data/*
+telegram_bot/telegram_bot_token.json

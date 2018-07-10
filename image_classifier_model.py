@@ -91,7 +91,9 @@ def model_train(model, model_name, training_input=None, training_output=None, ba
                   callbacks=callbacks, validation_data=validation_data)
 
 
-def predict_breed(model, image, default_size=(250, 250), ordered_classes_list=os.listdir(r'data\train')):
+def predict_breed(model, image, default_size=(250, 250),
+                  ordered_classes_list=os.listdir(r'C:\Users\lim_j\Google Drive\Technical Skills'
+                                                  r'\GitHub\Doggo Classifier Chatbot\data\train')):
     resized_image = cv2.resize(image, default_size)
     ndarray_image = np.reshape(resized_image, ((1, ) + resized_image.shape))
     casted_image = ndarray_image.astype(np.float32)

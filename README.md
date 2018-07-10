@@ -7,6 +7,19 @@
 Data Science Process:<br/>
 <br/>
 
+Update 10/07/2018:
+1. Used Python as backend for Telegram Bot, using Telegram Bot API
+2. Loads model, downloads images sent to the bot onto memory and predicts breed using it
+3. Set timeout to reduce memory consumption
+4. To-do: 
+	- Find free deployment service to host code
+	- To improve model
+	  1. Retrain with inclusion of non-dog class
+	  2. 100 more images per dog breed from other sources
+	- Include MongoDB backend that stores downloaded images (For delta training)
+	- Include option for user to inform the bot about whether the prediction is accurate, if inaccurate then provide the option for user to specify the breed of the dog
+
+
 Update 09/07/2018:
 1. Downloaded ~90-100 images per class (max limit of 100 search results per search from Google Search)
 	- Resized images to 250x250 upon completion of download for each image to reduce HD memory usage
@@ -100,10 +113,10 @@ Post-model training and validation:
 
 --
 
-Chatbot Development and Integration Process (TBC):
-1. Python Telegram Bot API or using NodeJS [To decide]
-2. Webhooks for bot
+Chatbot Development and Integration Process [DONE]:
+1. Python backend, Telegram Bot API
+2. Webhooks for bot with timeout of 100s
 	- When a user sends an image to the bot or mentioned the bot when sending an image in a group chat
-3. Bot sends images to back-end then run it through custom predict function
+3. Bot sends images to back-end then run it through custom predict pipeline function
 4. Outputs breed prediction and probability of the prediction
 
