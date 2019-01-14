@@ -1,13 +1,14 @@
 import json
 import time
+import sys
+sys.path.append('..')
 
 import requests
 import numpy as np
 import cv2
 from urllib.parse import quote_plus
-from keras.models import load_model
 
-from image_classifier_model import predict_breed
+from image_classifier_model import predict_breed, transfer_learning_model
 
 
 with open('telegram_bot_token.json') as file:
@@ -73,9 +74,10 @@ def echo_all(updates, model):
             image = download_image(file_id)
             breed_info = predict_breed(model, image)
             breed = breed_info[0]
-            breed_prob = round(breed_info[1] * 100, 2)
-            outbound_text = "Hola {}, I am {}% sure that this is a {}, what do you think?" \
-                .format(sender_name, breed_prob, breed)
+            breed_prob = [np.round(prob * 100, 2) for prob in breed_info[1]]
+            breed_dict = dict(zip(breed, breed_prob))
+            pred_text = ', '.join(['{}% sure that this is a {}' .format(value, key) for key, value in breed_dict.items()])
+            outbound_text = "Hola {}, I am " .format(sender_name) + pred_text + ", what do you think?"
         except Exception as e:
             print(e)
         send_message(outbound_text, chat, message_id)
@@ -92,9 +94,11 @@ def download_image(file_id):
     return image
 
 
-def main(model_name='doggo_classifier_model.h5'):
+def main(save_weights_name='doggo_classifier_weights_v2.h5'):
     # load image classifier model
-    doggo_model = load_model('../' + model_name)
+    doggo_model = transfer_learning_model(image_shape=(250, 250, 3), num_classes=209)
+    doggo_model.load_weights('../models/' + save_weights_name)
+    # doggo_model = load_model('../models/' + model_name)
     last_update_id = None
     while True:
         print(time.ctime())
