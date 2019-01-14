@@ -5,3 +5,5 @@ doggo_classifier.h5
 __pycache__/*
 data/*
 telegram_bot/telegram_bot_token.json
+.idea
+doggo-detecto.pem
