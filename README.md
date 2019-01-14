@@ -7,6 +7,12 @@
 Data Science Process:<br/>
 <br/>
 
+Update 14/01/2019:
+1. Deployed using AWS EC2 with a cronjob of 30 mins interval to ensure automatic re-deployment of bot (@DoggoDetectBot on Telegram)
+2. Fixed indexing error with telegram bot when using breed predict function
+3. Converted function from top 1 breed per image prediction to the top 3 breeds per image prediction
+
+
 Update 10/07/2018:
 1. Used Python as backend for Telegram Bot, using Telegram Bot API
 2. Loads model, downloads images sent to the bot onto memory and predicts breed using it
@@ -115,8 +121,8 @@ Post-model training and validation:
 
 Chatbot Development and Integration Process [DONE]:
 1. Python backend, Telegram Bot API
-2. Webhooks for bot with timeout of 100s
+2. Webhooks for bot
 	- When a user sends an image to the bot or mentioned the bot when sending an image in a group chat
 3. Bot sends images to back-end then run it through custom predict pipeline function
-4. Outputs breed prediction and probability of the prediction
+4. Outputs top 3 breed prediction and probability of the prediction
 
