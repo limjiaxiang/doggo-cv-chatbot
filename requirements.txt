@@ -5,7 +5,7 @@ bokeh==1.0.2
 boto==2.49.0
 boto3==1.8.8
 bz2file==0.98
-certifi==2018.8.24
+certifi==2018.11.29
 cffi==1.11.5
 chardet==3.0.4
 Click==7.0
@@ -20,8 +20,8 @@ gensim==3.5.0
 grpcio==1.16.1
 h5py==2.8.0
 heapdict==1.0.0
-idna==2.7
-Jinja2==2.10
+idna==2.8
+Jinja2==2.10.1
 jmespath==0.9.3
 joblib==0.13.0
 Keras==2.2.4
@@ -63,6 +63,6 @@ toolz==0.9.0
 torch==0.4.1
 torchvision==0.2.1
 tornado==5.1.1
-urllib3==1.23
+urllib3==1.24.1
 Werkzeug==0.14.1
 zict==0.1.3
