@@ -1,9 +1,11 @@
-images/*
 *.pkl
-image_scrapper/search_engine_creds.json
-doggo_classifier.h5
-__pycache__/*
-data/*
-telegram_bot/telegram_bot_token.json
 .idea
+
+data/*
+__pycache__/*
+
+old_README.md
 doggo-detecto.pem
+image_scrapper/search_engine_creds.json
+telegram_bot/telegram_bot_token.json
+
