@@ -14,6 +14,10 @@ Bot was previously deployed on an EC2 instance (Ubuntu) as a service
 - [Transfer Learning](#transfer-learning)
 - [Bot Development](#bot-development)
 - [Deployment](#deployment)
+- [Usage](#usage)
+- [Built With](#built-with)
+- [Author](#author)
+- [License](#license)
 
 ## Data Scraping
 The class labels (dog breeds) are obtained from a website listing 209 dog breeds and are extracted using 
@@ -77,7 +81,7 @@ The gif below shows a sample usage of the bot when it was active.
 * [OpenCV](https://github.com/opencv/opencv) - Image processing and manipulation
 * [Keras](https://github.com/keras-team/keras) - Modeling, transfer learning, etc.
 
-## Authors
+## Author
 
 * **Lim Jia Xiang** - *Initial work* - [limjiaxiang](https://github.com/limjiaxiang)
 
