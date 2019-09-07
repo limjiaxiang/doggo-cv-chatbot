@@ -102,7 +102,8 @@ def model_train(model, model_name, training_input=None, training_output=None, ba
 
 
 def predict_breed(model, image, default_size=(250, 250),
-                  ordered_classes_dict=load(os.path.join(os.path.dirname(__file__), 'telegram_bot', 'index_to_doggo.pkl'))):
+                  ordered_classes_dict=load(os.path.join(os.path.dirname(__file__),
+                                                         'telegram_bot', 'index_to_doggo.pkl'))):
     resized_image = cv2.resize(image, default_size)
     ndarray_image = np.reshape(resized_image, ((1, ) + resized_image.shape))
     casted_image = ndarray_image.astype(np.float32)
@@ -137,7 +138,8 @@ def decode_map(ndarray, mapping_list):
 #         image_filenames = os.listdir(image_class_dir)
 #         for image_filename in image_filenames:
 #             image_filepath = os.path.join(image_class_dir, image_filename)
-#             resized_image = cv2.resize(preprocess_input(cv2.imread(image_filepath)), dst=placeholder_img, dsize=image_size[0:2])
+#             resized_image = cv2.resize(preprocess_input(cv2.imread(image_filepath)),
+#                                        dst=placeholder_img, dsize=image_size[0:2])
 #             image_array.append(resized_image)
 #             image_label_array = np.zeros(len(classes_list))
 #             label_index = classes_list.index(image_class)
@@ -148,7 +150,7 @@ def decode_map(ndarray, mapping_list):
 
 if __name__ == '__main__':
     save_weights_name = 'models/doggo_classifier_weights_v2.h5'
-    # save_model_name = 'models/doggo_classifier_model_v1.h5'
+    save_model_name = 'models/doggo_classifier_model_v1.h5'
     batch_size = 200
     image_shape = (250, 250, 3)
     number_of_classes = len(os.listdir('data/train'))
@@ -158,7 +160,7 @@ if __name__ == '__main__':
     # x, y = processor.load_images(pad=True)
     # train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.15, random_state=15, stratify=np.unique(y))
 
-    # Training image data generator with Keras pre-processing function
+    # # Training image data generator with Keras pre-processing function
     # train_datagen = ImageDataGenerator(rotation_range=45, horizontal_flip=True, data_format='channels_last',
     #                                    zoom_range=0.2, width_shift_range=0.2, height_shift_range=0.2,
     #                                    fill_mode='nearest', shear_range=0.2, preprocessing_function=preprocess_input)
@@ -186,7 +188,7 @@ if __name__ == '__main__':
     # breed_preds = doggo_model.predict_generator(val_generator)
     # decoded_preds = decode_map(breed_preds, os.listdir(r'data\train'))
 
-    # Testing on single image prediction
+    # # Testing on single image prediction
     # doggo_model = load_model(save_model_name)
     print(time.ctime(), 'start')
     doggo_friends_dict = {}

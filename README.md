@@ -1,128 +1,86 @@
-# doggo-cv-chatbot
-<b>Doggo Breed Detection Chatbot Project: </b>
-<br/>
-<br/>
-<br/>
+# End-to-End Dog Breed Image Classification Chatbot
 
-Data Science Process:<br/>
-<br/>
+Side project to learn more about image classification and end-to-end machine learning 
+- From data collection/scraping to deployment
 
-Update 14/01/2019:
-1. Deployed using AWS EC2 with a cronjob of 30 mins interval to ensure automatic re-deployment of bot (@DoggoDetectBot on Telegram)
-2. Fixed indexing error with telegram bot when using breed predict function
-3. Converted function from top 1 breed per image prediction to the top 3 breeds per image prediction
+Bot was previously deployed on an EC2 instance (Ubuntu) as a service
+- When I still had AWS Educate credits
 
+## Table of Contents:
+- [Data Scraping](#data-scraping)
+- [Data Collection](#data-collection)
+- [Custom Image Processing](#custom-image-processing)
+- [Initial Modeling](#initial-modeling)
+- [Transfer Learning](#transfer-learning)
+- [Bot Development](#bot-development)
+- [Deployment](#deployment)
 
-Update 10/07/2018:
-1. Used Python as backend for Telegram Bot, using Telegram Bot API
-2. Loads model, downloads images sent to the bot onto memory and predicts breed using it
-3. Set timeout to reduce memory consumption
-4. To-do: 
-	- Find free deployment service to host code
-	- To improve model
-	  1. Retrain with inclusion of non-dog class
-	  2. 100 more images per dog breed from other sources
-	- Include MongoDB backend that stores downloaded images (For delta training)
-	- Include option for user to inform the bot about whether the prediction is accurate, if inaccurate then provide the option for user to specify the breed of the dog
+## Data Scraping
+The class labels (dog breeds) are obtained from a website listing 209 dog breeds and are extracted using 
+a simple function utilising BeautifulSoup4 library. 
 
+The function is named [scrape_for_scraps](image_scrapper/scraper_downloader.py#14) and its Python corresponding
+script can be found [here.](image_scrapper/scraper_downloader.py#94)
 
-Update 09/07/2018:
-1. Downloaded ~90-100 images per class (max limit of 100 search results per search from Google Search)
-	- Resized images to 250x250 upon completion of download for each image to reduce HD memory usage
-	- Total of 19,778 images downloaded, 654 MB total
-2. Performed transfer learning on Inception V3 image classification model, added a FC layer and model was trained for ~22 epochs using data augmentation via Keras Image Datagen
-	- Tested on unseen dog images from Google search
-	  1. 10 images per breed for top 5 most popular dog breeds and top 5 least popular breeds (~70% accuracy)
-	- Tested on unseen dog images of friends' dogs
-	  1. total of 63 images consisting of a poodle, a shiba inu and a schnauzer (73% accuracy)
-3. Moving on to developing Telegram Bot and integrating model's function with bot
-4. Possible improvements to model after Telegram Bot development and integration
-	- Histogram equalisation of images
-	- Build model with 2 FC layer and retrain with existing train dataset
-	- Train logistic regression model using Inception V3 bottleneck features (Ensemble)<br/>
+## Data Collection
+The image dataset (dog breed images) is gathered with the use of Google Image Search API. 
+Image links are retrieved from Google Image Search API (limit of 100 images per search)
+and the images are downloaded using Python's Requests library.
 
-Update 15/05/2018: (Updated plan)
-1. Severe lack of instances for each class (30~40)
-2. Download a minimum of 200 images per class (209 classes), scaling them down to 300x300 pixels
-3. Perform 10 data augmentations per image, resulting in 2000 augmented images per class
-4. Obtain bottleneck features of augmented images (2000*209) using InceptionV3, saving it in a .npy file
-5. Train nn model using bottleneck features on 2 FC NN, then 3 FC NN; both with dropout of 0.5 to reduce overfitting
-6. Train logistic regression model using bottleneck features, setting to 100 iterations
-7. If validation accuracy >= 0.5 then fine tune last convolution block of InceptionV3 by making it trainable<br/>
-<br/>
+The Google Image Search API function can be found [here.](image_scrapper/scraper_downloader.py#64)
 
-Gathering dataset
-1. Scrape relevant website for all breeds of dogs and save to csv [DONE]
-2. Download images of each class (breed) using Google CustomSearch API and requests [DONE] <br/>
-<br/>
+The image downloader function can be found [here.](image_scrapper/scraper_downloader.py#52)
 
-Preprocessing data 
-1. Build image preprocessing module with ImageProcessor class that:
-    - Checks images in a directory, filtering out images that are unprocessable by opencv [DONE]
-    - Build encoding and decoding dictionaries for labels for neural net input and output respectively [DONE]
-    - Resize images to specified size otherwise defaults to 200x200 pixels: [DONE]
-      1. Maintains aspect ratio and scales image down to 200 pixels for its larger edge
-      2. Pads the shorter edge if pad == True
-    - Normalises images on channel level using standard scaling [DONE]
-    - Loads images from a directory, matching images to their labels via their filenames and returns: [DONE]
-      1. 4D Numpy array of (number of examples, image height, image width, number of channels)
-      2. 1D Numpy array of labels in the same order as the loaded images
-2. Checked through download images for non-dog breed images and removed them [DONE]
-3. Histogram equalisation to increase contrast of low contrast image by balancing out distribution of pixel densities [To-do]<br/>
-<br/>
+## Custom Image Processing
+A image processor was developed to handle basic image manipulation:
+- [Loading images](image_preprocess.py#67)
+- [Image pixel normalisation](image_preprocess.py#94)
+- [Image resizing](image_preprocess.py#122)
+- [Image padding](image_preprocess.py#149)
 
-Modeling
-1. Develop a simple 3 layer CNN model with pooling using Keras (model v1): [DONE]
-    - Kernel size of 3x3
-    - Pooling size of 3x3
-    - Dropout of 0.5 (Prevent overfitting)
-2. Decide on an optimiser to use [DONE]
-    - Tried out SGD as optimiser but decided on Nadam (Nesterov momentum adaptive moment estimation)
-      - Nesterov momentum in place of standard momentum used in adam optimiser
-      - Uses weighted average of past n gradients to calculate parameter (weight) update
-3. Train model using simple CNN architecture: [In-progress]
-    - Tried SGD but did not normalise images nor perform data augmentation (End April 2018)
-      1. Did not work so well, normalising features is important for nn to converge to a local/global optima as it standardise the inputs
-      2. Low number of observations per class (~30-40 images per class) 
-    - Tried Nadam and Adadelta on image-level normalised images - per channel on image level (Early May 2018)
-      1. Seems to converge but speed is an issue (Half a day to reach 0.05 for validation accuracy)
-      2. Used ImageDataGenerator from keras to augment training dataset on the flow to specifications:
-        - Almost 'unlimited' training examples
-    - Trying out Nadam on dataset-level normalised images - per channel on dataset level [In-progress]
-      1. Increase number of filters for each convolution layer by a multiple of 2 of the previous layer's (slows down training)
-      2. Added 1 more fully connected layer before softmax output and increase number of nodes to be between number of output nodes and number of training examples (slows down training)
-      3. Increase max pooling kernel size from 2x2 to 3x3 to (speed up training)
-      4. Nadam on learning rate of 0.03 (speed up training)
-4. Apply transfer learning using Inception V3 image recognition model [DONE]
-	- Sticking to model built with transfer learning due to the high computational cost of building a nn image classifier from scratch
-	- Added a FC layer and set existing pre-trained layers to be untrainable
-	- Set FC layer to use RMSProp<br/>
-<br/>
+## Initial Modeling
+A simple [convolution neural network architecture](image_classifier_model.py#32) is developed and a model was trained with the image dataset.
+- However, too computationally heavy to train the model till a respectable performance is achieved
+- Attained ~5% classification accuracy on test set after training with a laptop's CPU (X1 Carbon 4th Gen)
 
-Validation: [DONE]
-1. Validation sets
-    - 10 dog breeds images from Google (10 per breed): ~70% accuracy
-	- 63 dog images of friends' dogs (poodle, shiba inu, schnauzer): ~73% accuracy
-<br/>
+## Transfer Learning
+A pre-trained image classification model trained on the ImageNet dataset was used and the chosen architecture was 
+Xception as it has the same number of parameters as Inception V3 but has better classification performance. 
+Only the last layer of weights are retrained to refit the model to be capable of performing dog breed classification.
 
-Post-model training and validation: 
-1. Build pre and post processing pipeline [DONE]
-    1. Preprocess input image
-        - Check processability [To-do]
-        - Resizing (OpenCV resize)
-        - Normalisation using Inception V3 preprocess
-    2. Postprocess output
-        - Decode output to class labels
-2. Further modularise image_processing module [To-do]<br/>
-<br/>
-<br/>
+The code for transfer learning can be found [here.](image_classifier_model.py#72)
 
---
+## Bot Development
+The Telegram bot functionality is created by utilising Python's requests library to interact with Telegram's Bot API.
 
-Chatbot Development and Integration Process [DONE]:
-1. Python backend, Telegram Bot API
-2. Webhooks for bot
-	- When a user sends an image to the bot or mentioned the bot when sending an image in a group chat
-3. Bot sends images to back-end then run it through custom predict pipeline function
-4. Outputs top 3 breed prediction and probability of the prediction
+Some of the bot's functionality includes:
+- Image message recognition (uploaded via Gallery or via @pic)
+- Responding to directed messages
+- Downloading the image in the message
+- Managing the dog breed classification model and using it for image prediction
 
+The Telegram bot implementation can be found [here.](telegram_bot/doggo_detect_bot.py)
+
+## Deployment
+Dog breed image classification bot was deployed on a AWS EC2 t3.small instance:
+- Initially set to run indefinitely with a cron job restarting the bot every hour
+- Switched to running the bot as a service with systemd, enabling the bot to be restarted automatically only if it terminates
+
+## Usage
+The gif below shows a sample usage of the bot when it was active.
+![](assets/doggo_bot_demo.gif)
+
+## Built With
+* [Google Search API](https://github.com/googleapis/google-api-python-client) - Data collection
+* [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) - Web scraping for class labels
+* [Requests](https://2.python-requests.org/en/master/) - Image downloads and bot requests
+* [OpenCV](https://github.com/opencv/opencv) - Image processing and manipulation
+* [Keras](https://github.com/keras-team/keras) - Modeling, transfer learning, etc.
+
+## Authors
+
+* **Lim Jia Xiang** - *Initial work* - [limjiaxiang](https://github.com/limjiaxiang)
+
+## License
+
+This project is licensed under the Apache License Version 2.0 - see the [LICENSE.md](LICENSE.md) file for details

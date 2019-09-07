@@ -1,6 +1,7 @@
 import json
 import time
 import sys
+sys.path.insert(0, '/home/ubuntu/Doggo Classifier Chatbot')
 sys.path.append('..')
 
 import requests
@@ -11,7 +12,7 @@ from urllib.parse import quote_plus
 from image_classifier_model import predict_breed, transfer_learning_model
 
 
-with open('telegram_bot_token.json') as file:
+with open('/home/ubuntu/Doggo Classifier Chatbot/telegram_bot/telegram_bot_token.json') as file:
     TOKEN = json.load(file)['token']
 URL = 'https://api.telegram.org/bot{}/' .format(TOKEN)
 
@@ -94,10 +95,10 @@ def download_image(file_id):
     return image
 
 
-def main(save_weights_name='doggo_classifier_weights_v2.h5'):
+def main(save_weights_name='/home/ubuntu/Doggo Classifier Chatbot/doggo_classifier_model.h5'):
     # load image classifier model
     doggo_model = transfer_learning_model(image_shape=(250, 250, 3), num_classes=209)
-    doggo_model.load_weights('../models/' + save_weights_name)
+    doggo_model.load_weights(save_weights_name)
     # doggo_model = load_model('../models/' + model_name)
     last_update_id = None
     while True:
