@@ -9,6 +9,10 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
+    <a href="https://github.com/limjiaxiang/doggo-cv-chatbot">
+    <img src="assets/border_collie.jpg" alt="Logo" width="320" height="210">
+  </a>
+  
   <h3 align="center">End2End Dog Breed Classification Chatbot</h3>
 
   <p align="center">
@@ -20,7 +24,7 @@
   </p>
 </p>
 
-** Note: **
+**Note:**
 - From data collection/scraping to deployment
 - Bot was previously deployed on an EC2 instance (Ubuntu) as a service
   - When I still had AWS Educate credits
