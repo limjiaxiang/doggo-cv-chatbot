@@ -13,15 +13,17 @@
 
   <p align="center">
      End-to-end dog breed image classification with machine learning
-  - From data collection/scraping to deployment
-  - Bot was previously deployed on an EC2 instance (Ubuntu) as a service
-    - When I still had AWS Educate credits
     <br />
     <a href="https://github.com/limjiaxiang/doggo-cv-chatbot/issues">Report Bug</a>
     ·
     <a href="https://github.com/limjiaxiang/doggo-cv-chatbot/issues">Request Feature</a>
   </p>
 </p>
+
+** Note: **
+- From data collection/scraping to deployment
+- Bot was previously deployed on an EC2 instance (Ubuntu) as a service
+  - When I still had AWS Educate credits
 
 
 ## Table of Contents:
