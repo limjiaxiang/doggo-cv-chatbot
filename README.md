@@ -1,10 +1,28 @@
-# End-to-End Dog Breed Image Classification Chatbot
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
-Side project to learn more about image classification and end-to-end machine learning 
+
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <h3 align="center">End-to-End Dog Breed Image Classification Chatbot</h3>
+
+  <p align="center">
+     End-to-end dog breed image classification with machine learning
+    <br />
+    <a href="https://github.com/limjiaxiang/doggo-cv-chatbot/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/limjiaxiang/doggo-cv-chatbot/issues">Request Feature</a>
+  </p>
+</p>
+
 - From data collection/scraping to deployment
-
-Bot was previously deployed on an EC2 instance (Ubuntu) as a service
-- When I still had AWS Educate credits
+- Bot was previously deployed on an EC2 instance (Ubuntu) as a service
+  - When I still had AWS Educate credits
 
 ## Table of Contents:
 - [Data Scraping](#data-scraping)
@@ -16,8 +34,9 @@ Bot was previously deployed on an EC2 instance (Ubuntu) as a service
 - [Deployment](#deployment)
 - [Usage](#usage)
 - [Built With](#built-with)
-- [Author](#author)
+- [Contact](#contact)
 - [License](#license)
+- [Acknowledgements](#acknowledgements)
 
 ## Data Scraping
 The class labels (dog breeds) are obtained from a website listing 209 dog breeds and are extracted using 
@@ -81,10 +100,32 @@ The gif below shows a sample usage of the bot when it was active.
 * [OpenCV](https://github.com/opencv/opencv) - Image processing and manipulation
 * [Keras](https://github.com/keras-team/keras) - Modeling, transfer learning, etc.
 
-## Author
+<!-- CONTACT -->
+## Contact
 
-* **Lim Jia Xiang** - *Initial work* - [limjiaxiang](https://github.com/limjiaxiang)
+Your Name - [Lim Jia Xiang](https://linkedin.com/in/limjiaxiang) - blakelimjiaxiang@gmail.com
+Project Link: [https://github.com/limjiaxiang/doggo-cv-chatbot](https://github.com/limjiaxiang/doggo-cv-chatbot)
 
 ## License
 
 This project is licensed under the Apache License Version 2.0 - see the [LICENSE.txt](LICENSE.txt) file for details
+
+<!-- ACKNOWLEDGEMENTS -->
+## Acknowledgements
+* [othneildrew/Best-README-Template](https://github.com/othneildrew/Best-README-Template/blob/master/README.md)
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/limjiaxiang/doggo-cv-chatbot.svg?style=flat-square
+[contributors-url]: https://github.com/limjiaxiang/doggo-cv-chatbot/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/limjiaxiang/doggo-cv-chatbot.svg?style=flat-square
+[forks-url]: https://github.com/limjiaxiang/doggo-cv-chatbot/network/members
+[stars-shield]: https://img.shields.io/github/stars/limjiaxiang/doggo-cv-chatbot.svg?style=flat-square
+[stars-url]: https://github.com/limjiaxiang/doggo-cv-chatbot/stargazers
+[issues-shield]: https://img.shields.io/github/issues/limjiaxiang/doggo-cv-chatbot.svg?style=flat-square
+[issues-url]: https://github.com/limjiaxiang/doggo-cv-chatbot/issues
+[license-shield]: https://img.shields.io/github/license/limjiaxiang/doggo-cv-chatbot.svg?style=flat-square
+[license-url]: https://github.com/limjiaxiang/doggo-cv-chatbot/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/limjiaxiang
