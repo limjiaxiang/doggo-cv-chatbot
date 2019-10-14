@@ -10,7 +10,7 @@
 <br />
 <p align="center">
     <a href="https://github.com/limjiaxiang/doggo-cv-chatbot">
-    <img src="assets/border_collie.jpg" alt="Logo" width="320" height="210">
+    <img src="assets/border_collie.jpg" alt="Logo" width="480" height="315">
   </a>
   
   <h3 align="center">End2End Dog Breed Classification Chatbot</h3>
