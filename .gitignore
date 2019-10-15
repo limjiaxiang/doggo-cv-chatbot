@@ -2,7 +2,8 @@ images/*
 *.pkl
 image_scrapper/search_engine_creds.json
 doggo_classifier.h5
-__pycache__/*
+__pycache__
 data/*
 telegram_bot/telegram_bot_token.json
 image_scrapper/breeds temp.csv
+.idea
