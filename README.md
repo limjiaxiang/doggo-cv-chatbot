@@ -9,7 +9,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-    <a href="https://github.com/limjiaxiang/doggo-cv-chatbot">
+  <a href="https://github.com/limjiaxiang/doggo-cv-chatbot">
     <img src="assets/border_collie.jpg" alt="Logo" width="480" height="315">
   </a>
   
