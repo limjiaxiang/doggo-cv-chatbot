@@ -6,3 +6,4 @@ __pycache__/*
 doggo-detecto.pem
 image_scrapper/search_engine_creds.json
 *.h5
+telegram_bot/telegram_bot_token.json
