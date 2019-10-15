@@ -10,6 +10,9 @@ from sklearn.externals import joblib
 class ImageProcessor(object):
     def __init__(self, image_folder, classes_csv=None, classes_lst=None,
                  save_encoding_fname=None, load_encoding_fname=None):
+        """
+        Initialise image processor object, internal module used for preprocessing scraped/downloaded images
+        """
         self.original_folder = os.getcwd()
         os.chdir(image_folder)
         self.image_folder = os.getcwd()

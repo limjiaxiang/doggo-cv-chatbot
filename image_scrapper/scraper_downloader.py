@@ -61,12 +61,8 @@ def photo_downloader(url, tag, folder, resize=None):
         cv2.imwrite(image_filepath, resized_img)
 
 
-
-
-def google_search(search_term,
-                  api_key,
-                  cse_id, layer='items',
-                  number=1, image=0, start_index=1, **kwargs):
+def google_search(search_term, api_key, cse_id,
+                  layer='items', number=1, image=0, start_index=1, **kwargs):
     """
         Performs a google search based on the search term on either webpage(s) or image(s)
     :param search_term: Search of interest [String]
@@ -77,7 +73,7 @@ def google_search(search_term,
     :param layer: First layer to traverse for JSON result [String]
     View https://developers.google.com/custom-search/json-api/v1/reference/cse/list#parameters > Response
     :param image: search for image if true (Boolean)
-    :param number: Number of search resulst to return [Integer]
+    :param number: Number of search results to return [Integer]
     :param kwargs: Additional parameters such as type of search (webpage or image), image size, etc.
     More on https://developers.google.com/custom-search/json-api/v1/reference/cse/list#parameters > Parameters
     :return: List of dictionaries. Each search result resides in a dictionary
@@ -85,7 +81,8 @@ def google_search(search_term,
     service = build('customsearch', 'v1', developerKey=api_key)
 
     if image:
-        res = service.cse().list(q=search_term, cx=cse_id, num=number, searchType='image', start=start_index, **kwargs).execute()
+        res = service.cse().list(q=search_term, cx=cse_id, num=number, searchType='image',
+                                 start=start_index, **kwargs).execute()
         return res['items']
     else:
         res = service.cse().list(q=search_term, cx=cse_id, num=number, start=start_index, **kwargs).execute()
