@@ -110,6 +110,7 @@ The gif below shows a sample usage of the bot when it was active.
 ## Contact
 
 [Lim Jia Xiang](https://linkedin.com/in/limjiaxiang) - blakelimjiaxiang@gmail.com
+
 Project Link: [https://github.com/limjiaxiang/doggo-cv-chatbot](https://github.com/limjiaxiang/doggo-cv-chatbot)
 
 ## License
