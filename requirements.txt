@@ -79,7 +79,7 @@ torch==0.4.1
 torchvision==0.2.1
 tornado==5.1.1
 uritemplate==3.0.0
-urllib3==1.25.3
+urllib3==1.26.5
 Werkzeug==0.15.6
 wrapt==1.11.2
 zict==0.1.3
